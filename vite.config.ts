@@ -6,24 +6,25 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     esbuildOptions: {
-      define: {
-        global: 'globalThis'
-      },
+      // Enable esbuild polyfill plugins
       plugins: [
         NodeGlobalsPolyfillPlugin({
           buffer: true,
         }),
       ],
+      // Define globalThis and Buffer
+      define: {
+        global: 'globalThis',
+      },
     },
   },
   resolve: {
     alias: {
-      crypto: 'crypto-js',
       stream: 'stream-browserify',
       buffer: 'buffer',
     },
   },
   define: {
-    'process.env': {}, // Optional, to ensure process is polyfilled if needed
+    'process.env': {}, // Provide process.env if needed
   },
 });
