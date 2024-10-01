@@ -7,10 +7,9 @@ export default function Hero() {
         <p className="text-sm font-medium text-accent mb-4">
           <span className="bg-blue-600 py-1 px-3 rounded-full">NEW</span> Now live on Solana Devnet!
         </p>
-        <h2 className="text-5xl font-bold mb-4">Trade Tokenize Real-World Assets on Solana</h2>
+        <h2 className="text-5xl font-bold mb-4">Decentralised Portfolio Dashboard</h2>
         <p className="text-xl text-gray-400 mb-8">
-          Transform physical assets into digital tokens with our secure and efficient Solana-based platform.
-          Watch your positions across solana protocols from our seamless portfolio dashboard and 
+          Monitor your Positions, Nfts, Swaps, Transactions and Wallets in one place
         </p>
         <div className="flex justify-center space-x-4">
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
