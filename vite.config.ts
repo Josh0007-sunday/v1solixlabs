@@ -3,10 +3,9 @@ import react from '@vitejs/plugin-react';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 
 export default defineConfig({
-  base: '/',
   plugins: [react()],
   build: {
-    sourcemap: false,
+    sourcemap: false, // Disable source maps in production
     rollupOptions: {
       output: {
         manualChunks: {
@@ -27,7 +26,7 @@ export default defineConfig({
           buffer: true,
         }),
       ],
-      // Define globalThis and Buffer
+      // Define globalThis and Buffer to avoid reference errors
       define: {
         global: 'globalThis',
       },
@@ -36,17 +35,17 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.flexlend.fi',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        target: 'https://api.flexlend.fi', // Proxy API calls to Flexlend API
+        changeOrigin: true, // Change the origin of the request to the target URL
+        rewrite: (path) => path.replace(/^\/api/, ''), // Rewrite /api to empty
       },
     },
   },
   resolve: {
     alias: {
-      stream: 'stream-browserify',
-      buffer: 'buffer',
-      crypto: 'crypto.js',
+      stream: 'stream-browserify', // Polyfill stream for browser
+      buffer: 'buffer', // Polyfill buffer
+      crypto: 'crypto.js', // Ensure crypto is mapped to crypto.js in browser
     },
   },
 });
