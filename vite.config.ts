@@ -1,24 +1,22 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
-// Check if `process` is undefined in the browser and mock it
-if (typeof global !== 'undefined' && !global.process) {
-  global.process = {
-    env: {
-      NODE_ENV: 'development', // Set a default value, can be 'production' when building
-    },
-  } as any;
-}
-
-// Vite configuration
 export default defineConfig({
   define: {
-    // Mock `process.env` to avoid errors from libraries expecting it
-    'process.env': {
-      NODE_ENV: JSON.stringify('development'), // You can change to 'production' for builds
-    },
+    'process.env': {},
+    'global': {},
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    nodePolyfills({
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true,
+      },
+    }),
+  ],
   build: {
     sourcemap: false,
     rollupOptions: {
@@ -30,21 +28,16 @@ export default defineConfig({
         },
       },
     },
-    chunkSizeWarningLimit: 1000, // Increase chunk size limit to 1000 KB
+    chunkSizeWarningLimit: 1000,
   },
   optimizeDeps: {
     include: ['@solana/spl-token', 'crypto-js', '@walletconnect/qrcode-modal'],
-    esbuildOptions: {
-      define: {
-        global: 'globalThis', // Polyfill `globalThis` for compatibility
-      },
-    },
   },
   resolve: {
     alias: {
       stream: 'stream-browserify',
       buffer: 'buffer',
-      crypto: 'crypto.js',
+      crypto: 'crypto-browserify',
     },
   },
   server: {
