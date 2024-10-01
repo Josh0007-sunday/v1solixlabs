@@ -1,6 +1,15 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// Polyfill for process in browser environments
+if (typeof global !== 'undefined' && !global.process) {
+  global.process = {
+    env: {
+      NODE_ENV: 'development', // Default environment
+    },
+  } as any; // TypeScript workaround for custom process object
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Load environment variables based on the mode (development/production)
@@ -8,10 +17,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     define: {
-      // Define process.env globally to include environment variables
+      // Inject environment variables into process.env
       'process.env': {
         SOME_KEY: JSON.stringify(env.SOME_KEY),
-        // You can add more environment variables if needed
         NODE_ENV: JSON.stringify(env.NODE_ENV),
       }
     },
@@ -32,7 +40,7 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       include: ['@solana/spl-token', 'crypto-js', '@walletconnect/qrcode-modal'],
       esbuildOptions: {
-        // Add any necessary polyfills
+        // Polyfill globalThis
         define: {
           global: 'globalThis',
         },
