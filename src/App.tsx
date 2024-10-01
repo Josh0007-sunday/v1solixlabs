@@ -7,11 +7,11 @@ import Terminal from './component/swap/page';
 import NFTDisplay from './component/nfts/page';
 import BuyMeCoffeeForm from './component/buymecofee/page';
 import Landingpage from './landingpage/page';
+import { Buffer } from "buffer";
 
+(window as any).Buffer = Buffer;
 
 function App() {
-
-
   return (
     <>
       <WalletConnectionProvider>
