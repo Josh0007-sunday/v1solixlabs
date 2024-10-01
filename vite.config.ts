@@ -10,6 +10,16 @@ if (typeof global !== 'undefined' && !global.process) {
   } as any; // TypeScript workaround for custom process object
 }
 
+// Polyfill for process in browser environments for crypto-js
+if (typeof global !== 'undefined' && !global.process) {
+  global.process = {
+    env: {
+      NODE_ENV: 'development', // Default environment
+    },
+    browser: true,
+  } as any; // TypeScript workaround for custom process object
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Load environment variables based on the mode (development/production)
