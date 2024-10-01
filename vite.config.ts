@@ -15,10 +15,11 @@ export default defineConfig({
         global: true,
         process: true,
       },
+      protocolImports: true,
     }),
   ],
   build: {
-    sourcemap: false,
+    sourcemap: true, // Enable source maps for debugging
     rollupOptions: {
       output: {
         manualChunks: {
@@ -32,12 +33,21 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['@solana/spl-token', 'crypto-js', '@walletconnect/qrcode-modal'],
+    esbuildOptions: {
+      target: 'esnext',
+    },
   },
   resolve: {
     alias: {
       stream: 'stream-browserify',
       buffer: 'buffer',
       crypto: 'crypto-browserify',
+      events: 'events',
+      assert: 'assert',
+      http: 'stream-http',
+      https: 'https-browserify',
+      os: 'os-browserify/browser',
+      url: 'url',
     },
   },
   server: {
