@@ -8,7 +8,7 @@ export default function Dashboard() {
                     <img
                         src={dashboard}
                         alt="Dashboard"
-                        className="mx-auto rounded-lg shadow-lg relative z-10 w-full h-96 object-cover"
+                        className="mx-auto rounded-lg shadow-lg relative z-10 w-full max-w-[1200px] object-cover"
                     />
                     <div className="absolute inset-0 z-0 rounded-lg blur-xl bg-blue-500 opacity-50"></div>
                 </div>
