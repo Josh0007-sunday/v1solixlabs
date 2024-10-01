@@ -1,33 +1,29 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// Polyfill for process in browser environments
 if (typeof global !== 'undefined' && !global.process) {
   global.process = {
     env: {
-      NODE_ENV: 'development', // Default environment
+      NODE_ENV: 'development',
     },
-  } as any; // TypeScript workaround for custom process object
+  } as any;
 }
 
-// Polyfill for process in browser environments for crypto-js
+
 if (typeof global !== 'undefined' && !global.process) {
   global.process = {
     env: {
-      NODE_ENV: 'development', // Default environment
+      NODE_ENV: 'development',
     },
     browser: true,
-  } as any; // TypeScript workaround for custom process object
+  } as any; 
 }
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Load environment variables based on the mode (development/production)
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
     define: {
-      // Inject environment variables into process.env
       'process.env': {
         SOME_KEY: JSON.stringify(env.SOME_KEY),
         NODE_ENV: JSON.stringify(env.NODE_ENV),
@@ -45,12 +41,11 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
-      chunkSizeWarningLimit: 1000, // Increase the chunk size warning limit to 1000 KB
+      chunkSizeWarningLimit: 1000,
     },
     optimizeDeps: {
       include: ['@solana/spl-token', 'crypto-js', '@walletconnect/qrcode-modal'],
       esbuildOptions: {
-        // Polyfill globalThis
         define: {
           global: 'globalThis',
         },
