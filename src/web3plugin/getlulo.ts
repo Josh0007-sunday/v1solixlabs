@@ -30,7 +30,7 @@ const useDepositInfo = (wallet: string | null) => {
       setError(null);
 
       try {
-        const apiKey = import.meta.env.VITE_FLEXLEND_API_KEY || '47133b70-e9ee-4ebf-af1c-c08f92217055';
+        const apiKey =  '47133b70-e9ee-4ebf-af1c-c08f92217055';
         
         console.log('Fetching data for wallet:', wallet);
         console.log('API Key:', apiKey);
