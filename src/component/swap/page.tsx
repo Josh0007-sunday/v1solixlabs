@@ -58,7 +58,7 @@ function Terminal() {
                 <div className="w-full max-w-md h-80">
                   <div
                     id="integrated-terminal"
-                    className="w-full h-full"
+                    className=""
                     style={{
                       color: "black", // Force black text color
                     }}
