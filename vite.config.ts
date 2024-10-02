@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 
 export default defineConfig({
   define: {
     'process.env': {},
-    'global': {},
+    'global': 'globalThis',
   },
   plugins: [
     react(),
@@ -32,9 +33,25 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
   },
   optimizeDeps: {
-    include: ['@solana/spl-token', 'crypto-js', '@walletconnect/qrcode-modal'],
+    include: [
+      '@solana/spl-token',
+      'crypto-js',
+      '@walletconnect/qrcode-modal',
+      'stream-browserify',
+      'buffer',
+      'crypto-browserify',
+      'events',
+    ],
     esbuildOptions: {
       target: 'esnext',
+       define: {
+        global: 'globalThis',
+      },
+      plugins: [
+        NodeGlobalsPolyfillPlugin({
+          buffer: true,
+        }),
+      ],
     },
   },
   resolve: {
@@ -60,3 +77,4 @@ export default defineConfig({
     },
   },
 });
+

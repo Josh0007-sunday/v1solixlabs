@@ -3,7 +3,7 @@ import Sidebar from '../../utils/sidebar/page';
 import Header from '../../utils/header/page';
 import Footer from '../../utils/footer/page';
 import { SimplifiedTransactionDetail, useFetchTransactions } from '../../web3plugin/fetchtransaction';
-import { getSolBalance, getSolPriceInUSD, getTokenAccounts, getStakeAccounts } from '../../web3plugin/portfolio';
+import { getSolBalance, getSolPriceInUSD, getStakeAccounts } from '../../web3plugin/portfolio';
 import { clusterApiUrl, Connection } from '@solana/web3.js';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -11,7 +11,8 @@ import DashboardWithLulo from '../lulo/page';
 import PieChart from '../chart/page';
 import Marginfi from '../marginfi/page';
 // UPDATE: Import splDiscriminate function
-import { splDiscriminate } from '../../util'; // Adjust the import path as needed
+import { splDiscriminate } from '../../util';
+import { getTokenAccounts } from '../../web3plugin/portfolio';
 
 // Update the environment variable prefix for Vite
 const RPC_ENDPOINTS = [
@@ -20,12 +21,12 @@ const RPC_ENDPOINTS = [
     clusterApiUrl('mainnet-beta'),
 ];
 
-interface TokenAccount {
+interface StakeAccount {
     address: string;
     balance: number;
 }
 
-interface StakeAccount {
+interface TokenAccount {
     address: string;
     balance: number;
 }
@@ -119,6 +120,33 @@ const DashboardLayout: React.FC = () => {
         }
     };
 
+    const fetchTokenAccounts = async () => {
+        if (!publicKey) {
+            setError('Wallet not connected');
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            const connection = new Connection(clusterApiUrl('mainnet-beta')); // Or use your custom RPC endpoint
+            const accounts = await getTokenAccounts(publicKey, connection);
+            setTokenAccounts(accounts);
+        } catch (err) {
+            console.error('Error fetching token accounts:', err);
+            setError('Failed to fetch token accounts');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (connected) {
+            fetchTokenAccounts();
+        }
+    }, [connected, publicKey]);
+
     const data = [
         { label: 'A', value: 30, color: '#FF6384' },
         { label: 'B', value: 20, color: '#36A2EB' },
@@ -140,6 +168,9 @@ const DashboardLayout: React.FC = () => {
                     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                         <div className="px-4 py-6 sm:px-0">
                             <div className="flex flex-col space-y-6">
+
+
+
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="bg-white overflow-hidden shadow rounded-lg">
                                         <div className="px-4 py-5 sm:p-6">
@@ -163,6 +194,10 @@ const DashboardLayout: React.FC = () => {
                                                     </div>
                                                 </>
                                             )}
+
+                                           
+
+
                                         </div>
                                     </div>
                                     <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -182,15 +217,7 @@ const DashboardLayout: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* UPDATE: Add new section for discriminated value */}
-                                <div className="bg-white overflow-hidden shadow rounded-lg">
-                                    <div className="px-4 py-5 sm:p-6">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Discriminated Value</h3>
-                                        <div className="mt-1 text-3xl font-semibold text-gray-900">
-                                            {discriminatedValue}
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     <div className="bg-white overflow-hidden shadow rounded-lg">
                                         <div className="px-4 py-5 sm:p-6">
@@ -220,7 +247,70 @@ const DashboardLayout: React.FC = () => {
                                     <div className="bg-white overflow-hidden shadow rounded-lg">
                                         <div className="px-4 py-5 sm:p-6">
                                             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Portfolio Distribution</h3>
-                                            <PieChart data={data}/>
+                                            <PieChart data={data} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/*Place for token account*/}
+                                <div className="bg-white overflow-hidden shadow rounded-lg">
+                                    <div className="px-4 py-5 sm:p-6">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Token Accounts</h3>
+                                        <div className="mt-1 text-3xl font-semibold text-gray-900">
+                                            {/* Scrollable Table for Token Accounts */}
+                                            <div className="max-h-64 overflow-y-auto overflow-x-auto">
+                                                <table className="min-w-full divide-y divide-gray-200">
+                                                    <thead className="bg-gray-50 sticky top-0">
+                                                        <tr>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                            >
+                                                                Token Address
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                            >
+                                                                Balance (SOL)
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="bg-white divide-y divide-gray-200">
+                                                        {tokenAccounts.length > 0 ? (
+                                                            tokenAccounts.map((account) => (
+                                                                <tr key={account.address}>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                                        {account.address}
+                                                                    </td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                        {account.balance.toFixed(6)} SOL
+                                                                    </td>
+                                                                </tr>
+                                                            ))
+                                                        ) : (
+                                                            <tr>
+                                                                <td
+                                                                    colSpan={2}
+                                                                    className="px-6 py-4 text-sm font-medium text-gray-500 text-center"
+                                                                >
+                                                                    No token accounts found
+                                                                </td>
+                                                            </tr>
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* UPDATE: Add new section for discriminated value */}
+                                <div className="bg-white overflow-hidden shadow rounded-lg">
+                                    <div className="px-4 py-5 sm:p-6">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Discriminated Value</h3>
+                                        <div className="mt-1 text-3xl font-semibold text-gray-900">
+                                            {discriminatedValue}
                                         </div>
                                     </div>
                                 </div>
@@ -230,7 +320,7 @@ const DashboardLayout: React.FC = () => {
                                 </div>
 
                                 <div>
-                                    <Marginfi/>
+                                    <Marginfi />
                                 </div>
                             </div>
                         </div>
@@ -240,7 +330,10 @@ const DashboardLayout: React.FC = () => {
                 {/* Footer */}
                 <Footer />
             </div>
+
         </div>
+
+
     );
 };
 
