@@ -1,17 +1,16 @@
+import React from 'react';
 
-
-const Footer = () => {
+const Footer: React.FC<{ isDarkTheme: boolean }> = ({ isDarkTheme }) => {
     return (
-        <footer className="bg-white shadow-sm">
+        <footer className={`${isDarkTheme ? 'bg-gray-800 text-white' : 'bg-white text-gray-500'} shadow-sm mt-auto`}>
             <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center">
-                    <p className="text-gray-500">&copy; 2024 Solix</p>
-                    <div className="w-1/3"></div>
-                    <p className="text-gray-500">All rights reserved</p>
+                    <p>&copy; 2024 Solix</p>
+                    <p>All rights reserved</p>
                 </div>
             </div>
         </footer>
-    )
-}
+    );
+};
 
-export default Footer
+export default Footer;

@@ -1,21 +1,22 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import Sidebar from '../../utils/sidebar/page';
-import Header from '../../utils/header/page';
-import Footer from '../../utils/footer/page';
+import MainLayout from '../../utils/mainlayout';
 
-function Terminal() {
+interface TerminalProps {
+  isDarkTheme: boolean;
+  toggleTheme: () => void;
+}
+
+const Terminal: React.FC<TerminalProps> = ({ isDarkTheme, toggleTheme }) => {
   const { connected, publicKey } = useWallet();
 
   useEffect(() => {
     if (connected) {
-      // Dynamically load the Jupiter script
       const script = document.createElement('script');
       script.src = "https://terminal.jup.ag/main-v2.js";
-      script.onload = () => launchJupiter(); // Initialize Jupiter after the script loads
+      script.onload = () => launchJupiter();
       document.head.appendChild(script);
 
-      // Cleanup the script on component unmount
       return () => {
         if (script) {
           document.head.removeChild(script);
@@ -32,47 +33,39 @@ function Terminal() {
       strictTokenList: false,
       defaultExplorer: "SolanaFM",
       formProps: {
-        initialAmount: "888888880000", // BONK token
-        initialInputMint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263", // BONK Mint Address
-        initialOutputMint: "AZsHEMXd36Bj1EMNXhowJajpUXzrKcK57wW4ZGXVa7yR", // Output Mint Address
+        initialAmount: "888888880000",
+        initialInputMint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+        initialOutputMint: "AZsHEMXd36Bj1EMNXhowJajpUXzrKcK57wW4ZGXVa7yR",
       },
     }) : console.error("Jupiter script not loaded or wallet not connected");
   }
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <Header />
-
-        {/* Main content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            <div className="px-4 py-6 sm:px-0">
-              <div className="border-4 border-dashed border-gray-200 rounded-lg h-80 flex items-center justify-center">
-                {/* Jupiter Terminal */}
-                <div className="w-full max-w-md h-80">
-                  <div
-                    id="integrated-terminal"
-                    className=""
-                    style={{
-                      color: "black", // Force black text color
-                    }}
-                  ></div>
+    <MainLayout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+      <div className={`flex h-full ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className="flex-1 flex flex-col">
+          <main className={`flex-1 ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-100'}`}>
+            <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 h-full">
+              <div className="px-4 py-6 sm:px-0 h-full">
+                <div className={`border-4 border-dashed ${isDarkTheme ? 'border-gray-700' : 'border-gray-200'} rounded-lg h-full flex items-center justify-center`}>
+                  <div className="w-full max-w-md h-full flex items-center justify-center">
+                    <div
+                      id="integrated-terminal"
+                      className="w-full h-full"
+                      style={{
+                        color: isDarkTheme ? 'white' : 'black',
+                      }}
+                    >
+                      Jupiter Terminal
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </main>
-
-        {/* Footer */}
-        <Footer />
+          </main>
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }
 

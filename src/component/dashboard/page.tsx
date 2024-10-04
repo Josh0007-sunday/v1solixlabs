@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../../utils/sidebar/page';
-import Header from '../../utils/header/page';
-import Footer from '../../utils/footer/page';
 import { SimplifiedTransactionDetail, useFetchTransactions } from '../../web3plugin/fetchtransaction';
 import { getSolBalance, getSolPriceInUSD, getStakeAccounts } from '../../web3plugin/portfolio';
 import { clusterApiUrl, Connection } from '@solana/web3.js';
@@ -13,6 +10,7 @@ import Marginfi from '../marginfi/page';
 // UPDATE: Import splDiscriminate function
 import { splDiscriminate } from '../../util';
 import { getTokenAccounts } from '../../web3plugin/portfolio';
+import MainLayout from '../../utils/mainlayout';
 
 // Update the environment variable prefix for Vite
 const RPC_ENDPOINTS = [
@@ -31,7 +29,13 @@ interface TokenAccount {
     balance: number;
 }
 
-const DashboardLayout: React.FC = () => {
+interface DashboardLayoutProps {
+    isDarkTheme: boolean;
+    toggleTheme: () => void;
+}
+
+
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ isDarkTheme, toggleTheme }) => {
     const { publicKey, connected } = useWallet();
     useConnection();
     const [solBalance, setSolBalance] = useState<number | null>(null);
@@ -154,186 +158,162 @@ const DashboardLayout: React.FC = () => {
     ];
 
     return (
-        <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
-            <Sidebar />
-
-            {/* Main content area */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-                {/* Header */}
-                <Header />
-
-                {/* Main content */}
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-                    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                        <div className="px-4 py-6 sm:px-0">
-                            <div className="flex flex-col space-y-6">
-
-
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="bg-white overflow-hidden shadow rounded-lg">
-                                        <div className="px-4 py-5 sm:p-6">
-                                            <div className="flex items-center justify-between">
-                                                <h3 className="text-lg leading-6 font-medium text-gray-900">Net Worth</h3>
-                                                <button onClick={toggleBalance} className="text-sm text-blue-500 hover:text-blue-700">
-                                                    {showBalance ? <FaEyeSlash className="inline mr-1" /> : <FaEye className="inline mr-1" />}
-                                                    {showBalance ? "Hide" : "Show"}
-                                                </button>
-                                            </div>
-                                            {solBalance !== null && solPrice !== null && (
-                                                <>
-                                                    <div className="mt-1 text-3xl font-semibold text-gray-900">
-                                                        ${showBalance ? (solBalance * solPrice).toFixed(2) : obfuscateValue("1000")}
-                                                    </div>
-                                                    <div className="mt-1">
-                                                        <span className="text-2xl font-semibold text-gray-900">
-                                                            {showBalance ? solBalance.toFixed(2) : obfuscateValue("0.82456098")}
-                                                        </span>
-                                                        <span className="text-xl text-gray-500"> SOL</span>
-                                                    </div>
-                                                </>
-                                            )}
-
-                                           
-
-
-                                        </div>
+         <MainLayout isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}>
+            <div className={`min-h-screen ${isDarkTheme ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
+                <main className="p-4 sm:p-6 lg:p-8">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="space-y-6">
+                            {/* Net Worth, NFTs, and Stakes */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* Net Worth */}
+                                <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} shadow rounded-lg p-6`}>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'}`}>Net Worth</h3>
+                                        <button onClick={toggleBalance} className={`text-sm ${isDarkTheme ? 'text-blue-400 hover:text-blue-300' : 'text-blue-500 hover:text-blue-700'}`}>
+                                            {showBalance ? <FaEyeSlash className="inline mr-1" /> : <FaEye className="inline mr-1" />}
+                                            {showBalance ? "Hide" : "Show"}
+                                        </button>
                                     </div>
-                                    <div className="bg-white overflow-hidden shadow rounded-lg">
-                                        <div className="px-4 py-5 sm:p-6">
-                                            <h3 className="text-lg leading-6 font-medium text-gray-900">NFTs</h3>
-                                            <div className="mt-1 text-3xl font-semibold text-gray-900">
-                                                {showBalance ? tokenAccounts.length : obfuscateValue("10")}
+                                    {solBalance !== null && solPrice !== null && (
+                                        <>
+                                            <div className={`mt-2 text-3xl font-semibold ${isDarkTheme ? 'text-gray-100' : 'text-gray-900'}`}>
+                                                ${showBalance ? (solBalance * solPrice).toFixed(2) : obfuscateValue("1000")}
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="bg-white overflow-hidden shadow rounded-lg">
-                                        <div className="px-4 py-5 sm:p-6">
-                                            <h3 className="text-lg leading-6 font-medium text-gray-900">Stakes</h3>
-                                            <div className="mt-1 text-3xl font-semibold text-gray-900">
-                                                {showBalance ? stakeAccounts.length : obfuscateValue("10")}
+                                            <div className="mt-1">
+                                                <span className={`text-2xl font-semibold ${isDarkTheme ? 'text-gray-100' : 'text-gray-900'}`}>
+                                                    {showBalance ? solBalance.toFixed(2) : obfuscateValue("0.82456098")}
+                                                </span>
+                                                <span className={`text-xl ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}> SOL</span>
                                             </div>
-                                        </div>
+                                        </>
+                                    )}
+                                </div>
+                                {/* NFTs */}
+                                <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} shadow rounded-lg p-6`}>
+                                    <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'}`}>NFTs</h3>
+                                    <div className={`mt-2 text-3xl font-semibold ${isDarkTheme ? 'text-gray-100' : 'text-gray-900'}`}>
+                                        {showBalance ? tokenAccounts.length : obfuscateValue("10")}
                                     </div>
                                 </div>
-
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    <div className="bg-white overflow-hidden shadow rounded-lg">
-                                        <div className="px-4 py-5 sm:p-6">
-                                            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Recent Transactions</h3>
-                                            <div className="h-64 overflow-y-auto">
-                                                <ul className="divide-y divide-gray-200">
-                                                    {transactions.map((tx) => (
-                                                        <li key={tx.signature} className="py-4">
-                                                            <div className="flex items-center justify-between">
-                                                                <div className="text-sm font-medium text-gray-900">{tx.message}</div>
-                                                                <div className="text-sm text-gray-500">{tx.date}</div>
-                                                            </div>
-                                                            <div className="mt-1 text-sm text-gray-500">
-                                                                Status: {tx.status}
-                                                            </div>
-                                                            <div className="mt-1 text-sm text-blue-500">
-                                                                <a href={`https://explorer.solana.com/tx/${tx.signature}`} target="_blank" rel="noopener noreferrer">
-                                                                    {tx.signature.slice(0, 8)}...
-                                                                </a>
-                                                            </div>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="bg-white overflow-hidden shadow rounded-lg">
-                                        <div className="px-4 py-5 sm:p-6">
-                                            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Portfolio Distribution</h3>
-                                            <PieChart data={data} />
-                                        </div>
+                                {/* Stakes */}
+                                <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} shadow rounded-lg p-6`}>
+                                    <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'}`}>Stakes</h3>
+                                    <div className={`mt-2 text-3xl font-semibold ${isDarkTheme ? 'text-gray-100' : 'text-gray-900'}`}>
+                                        {showBalance ? stakeAccounts.length : obfuscateValue("10")}
                                     </div>
                                 </div>
+                            </div>
 
-                                {/*Place for token account*/}
-                                <div className="bg-white overflow-hidden shadow rounded-lg">
-                                    <div className="px-4 py-5 sm:p-6">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Token Accounts</h3>
-                                        <div className="mt-1 text-3xl font-semibold text-gray-900">
-                                            {/* Scrollable Table for Token Accounts */}
-                                            <div className="max-h-64 overflow-y-auto overflow-x-auto">
-                                                <table className="min-w-full divide-y divide-gray-200">
-                                                    <thead className="bg-gray-50 sticky top-0">
-                                                        <tr>
-                                                            <th
-                                                                scope="col"
-                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                                            >
-                                                                Token Address
-                                                            </th>
-                                                            <th
-                                                                scope="col"
-                                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                                            >
-                                                                Balance (SOL)
-                                                            </th>
+                            {/* Recent Transactions and Portfolio Distribution */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                {/* Recent Transactions */}
+                                <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} shadow rounded-lg p-6`}>
+                                    <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'} mb-4`}>Recent Transactions</h3>
+                                    <div className="overflow-y-auto" style={{ maxHeight: "24rem" }}>
+                                        <ul className={`divide-y ${isDarkTheme ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                                            {transactions.map((tx) => (
+                                                <li key={tx.signature} className="py-4">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className={`text-sm font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'}`}>{tx.message}</div>
+                                                        <div className={`text-sm ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}>{tx.date}</div>
+                                                    </div>
+                                                    <div className={`mt-1 text-sm ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                        Status: {tx.status}
+                                                    </div>
+                                                    <div className="mt-1 text-sm text-blue-500">
+                                                        <a
+                                                            href={`https://explorer.solana.com/tx/${tx.signature}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className={isDarkTheme ? 'text-blue-400 hover:text-blue-300' : 'text-blue-500 hover:text-blue-700'}
+                                                        >
+                                                            {tx.signature.slice(0, 8)}...
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                                {/* Portfolio Distribution */}
+                                <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} shadow rounded-lg p-6`}>
+                                    <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'} mb-4`}>Portfolio Distribution</h3>
+                                    <PieChart data={data} />
+                                </div>
+                            </div>
+
+                            {/* Token Accounts Section */}
+                            <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} shadow rounded-lg p-6`}>
+                                <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'} mb-4`}>Token Accounts</h3>
+                                <div className="mt-1 text-3xl font-semibold text-gray-900">
+                                    <div className="max-h-64 overflow-y-auto overflow-x-auto">
+                                        <table className={`min-w-full divide-y ${isDarkTheme ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                                            <thead className={isDarkTheme ? 'bg-gray-700' : 'bg-gray-50'}>
+                                                <tr>
+                                                    <th
+                                                        scope="col"
+                                                        className={`px-6 py-3 text-left text-xs font-medium ${isDarkTheme ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}
+                                                    >
+                                                        Token Address
+                                                    </th>
+                                                    <th
+                                                        scope="col"
+                                                        className={`px-6 py-3 text-left text-xs font-medium ${isDarkTheme ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}
+                                                    >
+                                                        Balance (SOL)
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} divide-y ${isDarkTheme ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                                                {tokenAccounts.length > 0 ? (
+                                                    tokenAccounts.map((account) => (
+                                                        <tr key={account.address}>
+                                                            <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'}`}>
+                                                                {account.address}
+                                                            </td>
+                                                            <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDarkTheme ? 'text-gray-300' : 'text-gray-500'}`}>
+                                                                {account.balance.toFixed(6)} SOL
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody className="bg-white divide-y divide-gray-200">
-                                                        {tokenAccounts.length > 0 ? (
-                                                            tokenAccounts.map((account) => (
-                                                                <tr key={account.address}>
-                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                                        {account.address}
-                                                                    </td>
-                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                        {account.balance.toFixed(6)} SOL
-                                                                    </td>
-                                                                </tr>
-                                                            ))
-                                                        ) : (
-                                                            <tr>
-                                                                <td
-                                                                    colSpan={2}
-                                                                    className="px-6 py-4 text-sm font-medium text-gray-500 text-center"
-                                                                >
-                                                                    No token accounts found
-                                                                </td>
-                                                            </tr>
-                                                        )}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td
+                                                            colSpan={2}
+                                                            className={`px-6 py-4 text-sm font-medium ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'} text-center`}
+                                                        >
+                                                            No token accounts found
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* UPDATE: Add new section for discriminated value */}
-                                <div className="bg-white overflow-hidden shadow rounded-lg">
-                                    <div className="px-4 py-5 sm:p-6">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Discriminated Value</h3>
-                                        <div className="mt-1 text-3xl font-semibold text-gray-900">
-                                            {discriminatedValue}
-                                        </div>
-                                    </div>
+                            {/* Discriminated Value Section */}
+                            <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'} shadow rounded-lg p-6`}>
+                                <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-900'}`}>Discriminated Value</h3>
+                                <div className={`mt-2 text-3xl font-semibold ${isDarkTheme ? 'text-gray-100' : 'text-gray-900'}`}>
+                                    {discriminatedValue}
                                 </div>
+                            </div>
 
-                                <div>
-                                    <DashboardWithLulo />
-                                </div>
+                            {/* DashboardWithLulo */}
+                            <div>
+                                <DashboardWithLulo isDarkTheme={isDarkTheme} />
+                            </div>
 
-                                <div>
-                                    <Marginfi />
-                                </div>
+                            {/* Marginfi */}
+                            <div>
+                                <Marginfi isDarkTheme={isDarkTheme} />
                             </div>
                         </div>
                     </div>
                 </main>
-
-                {/* Footer */}
-                <Footer />
             </div>
-
-        </div>
-
-
+        </MainLayout>
     );
 };
 

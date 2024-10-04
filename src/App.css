@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body.dark {
+    background-color: #1a1a1a;
+    /* Dark background color */
+    color: white;
+    /* Light text color */
+}
+
+/* Ensure all text becomes white in dark mode */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark p {
+    color: white;
+    /* Adjust for other text elements as needed */
+}

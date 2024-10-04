@@ -130,16 +130,20 @@
 
 // export default Marginfi;
 
-const Marginfi= () => {
+interface MarginfiProp {
+  isDarkTheme: boolean;
+}
+
+const Marginfi: React.FC<MarginfiProp> = ({ isDarkTheme }) => {
   return (
-    <div className="px-4 py-6 w-full sm:px-0">
+    <div className={`px-4 py-6 w-full sm:px-0 ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <div className="grid grid-cols-1 gap-6">
-        <h2 className="text-2xl font-bold text-black mb-1">Marginfi</h2>
-        <div className="bg-white shadow-lg rounded-lg border border-gray-200 flex flex-col p-6 w-full">
+        <h2 className={`text-2xl font-bold mb-1 ${isDarkTheme ? 'text-white' : 'text-black'}`}>Marginfi</h2>
+        <div className={`shadow-lg rounded-lg border ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} flex flex-col p-6 w-full`}>
           <div className="flex-1 pr-6">
-            <h2 className="text-2xl font-bold mb-4">Deposit Information</h2>
+            <h2 className={`text-2xl font-bold mb-4 ${isDarkTheme ? 'text-white' : 'text-black'}`}>Deposit Information</h2>
             <div className="flex justify-center">
-              <p>coming soon...</p>
+             <p className={isDarkTheme ? 'text-gray-300' : 'text-gray-700'}>coming soon...</p>
             </div>
           </div>
         </div>
