@@ -8,7 +8,7 @@ import BuyMeCoffeeForm from './component/buymecofee/page';
 import Landingpage from './landingpage/page';
 import { Buffer } from "buffer";
 import { useState, useEffect } from 'react';
-import USDCVaultComponent from './component/vault/page';
+// import USDCVaultComponent from './component/vault/page';
 
 (window as any).Buffer = Buffer;
 
@@ -36,7 +36,7 @@ function App() {
             <Route path="/swap" element={<Terminal isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} />} />
            <Route path='/nfts' element={<NFTDisplay isDarkTheme={isDarkTheme} toggleTheme={toggleTheme} />} />
             <Route path='/buymecofee' element={<BuyMeCoffeeForm  isDarkTheme={isDarkTheme} toggleTheme={toggleTheme}/>} />
-            <Route path="/vault" element={<USDCVaultComponent/>} />
+            {/* <Route path="/vault" element={<USDCVaultComponent/>} /> */}
           </Routes>
         </BrowserRouter>
       </WalletConnectionProvider>

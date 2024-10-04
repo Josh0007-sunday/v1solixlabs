@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode, ReactElement } from 'react';
+import React, { useState, ReactNode, ReactElement } from 'react';
 import Sidebar from './sidebar/page';
 import Header from './header/page';
 import Footer from './footer/page';
