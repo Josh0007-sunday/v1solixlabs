@@ -1,50 +1,6 @@
-# React + TypeScript + Vite
+# Solix Finance
+A decentralise portfolio dashboard on solana, Monitor Your positions, Nfts, Transactions seamslessly with Solix finance
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Managing crypto assets in the fast-paced world of Solana can be overwhelming. With tokens, NFTs, and DeFi investments spread across multiple wallets and platforms, it’s tough to get a clear picture of your portfolio. This often leads to missed opportunities and makes decision-making frustrating. SolixFinance is here to change that.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+We’ve created SolixFinance, a decentralized platform designed to simplify the management of Solana based assets. By integrating with decentralized exchanges (DEXs), NFT marketplaces, and DeFi platforms, SolixFinance offers users a complete, real-time view of their portfolio. Whether you’re tracking tokens, NFTs, or DeFi positions, everything is accessible in one place—eliminating the need to rely on multiple centralized platforms or manually gather data from various sources. SolixFinance puts it all at your fingertips, offering a seamless and intuitive experience.
