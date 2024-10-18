@@ -1,14 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Wallet, Menu, X } from "lucide-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
-
-
-
-
-
-
 
 export default function Header() {
   const [showPopup, setShowPopup] = useState(false);
@@ -61,13 +54,55 @@ export default function Header() {
             onClick={() => setShowPopup(true)}
             className="py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded font-semibold text-white flex items-center transition-colors"
           >
-            <Wallet className="mr-2" size={18} />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+              <path
+                fillRule="evenodd"
+                d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
+                clipRule="evenodd"
+              />
+            </svg>
             LAUNCH APP
           </button>
         </div>
 
         <button onClick={toggleMenu} className="md:hidden">
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          {menuOpen ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
         </button>
       </header>
 
@@ -101,7 +136,19 @@ export default function Header() {
               }}
               className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded font-semibold text-white flex items-center justify-center transition-colors"
             >
-              <Wallet className="mr-2" size={18} />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                <path
+                  fillRule="evenodd"
+                  d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
+                  clipRule="evenodd"
+                />
+              </svg>
               LAUNCH APP
             </button>
           </div>
@@ -116,7 +163,20 @@ export default function Header() {
               className="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors"
               aria-label="Close"
             >
-              <X size={24} />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
             <h2 className="text-2xl font-bold mb-4 text-white text-center">
               Connect Wallet
