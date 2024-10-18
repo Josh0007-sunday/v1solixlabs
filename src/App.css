@@ -1,19 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body.dark {
-    background-color: #1a1a1a;
-    /* Dark background color */
-    color: white;
-    /* Light text color */
+body {
+    font-family: "JetBrains Mono", monospace;
 }
 
-/* Ensure all text becomes white in dark mode */
+body.dark {
+    background-color: #1a1a1a;
+    color: white;
+}
 body.dark h1,
 body.dark h2,
 body.dark h3,
 body.dark p {
     color: white;
-    /* Adjust for other text elements as needed */
 }
